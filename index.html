@@ -7,52 +7,98 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
       
     <link rel="stylesheet" href="style.css">
     <title>Multi-Currency Converter</title>
   </head>
   <body>
-    <h1 class="display-1">Multi-Currency Converter</h1>
-    <form>
-        <span>Amount</span>
-        <div id="inputfield">
-            <input type="number" id="amount" min="0" class="form-control" placeholder="Amount" onkeyup="setTable()">
+      <nav id="bar" class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" onclick="homeclicked()">Multi-Currency Converter</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a id="barhome" class="nav-item nav-link active" onclick="homeclicked()">Live Exchange</a>
+                <a id="barhis" class="nav-item nav-link" onclick="historyclicked()">Historical Currenncy Rates</a>
+                <button type="button" class="btn btn-dark" id="theme" onclick="changeTheme()">Dark</button>
+            </div>
         </div>
-        <div class="showdiv">
-            <span class="tag">Base Country</span>
-            <select class="custom-select my-1 mr-sm-2" id="base" onchange="countryChanged('base')"></select>
-            <span class="tag">Target Country</span>
-            <select class="custom-select my-1 mr-sm-2" id="target" onchange="countryChanged('target')"></select>
+        
+      </nav>
+      <div id="home">
+        <form>
+            <span class="tag">Amount</span>
+            <div id="inputfield">
+                <input type="number" id="amount" min="0" class="form-control" placeholder="Amount" onkeyup="setTable()">
+            </div>
+            <div class="showdiv">
+                <span class="tag">Base Currency</span>
+                <select class="custom-select my-1 mr-sm-2" id="base" onchange="countryChanged('base')"></select>
+                <span class="tag">Target Currency</span>
+                <select class="custom-select my-1 mr-sm-2" id="target" onchange="countryChanged('target')"></select>
+            </div>
+        </form>
+        <div id="outputfield">
+            <p id="result"></p>
         </div>
-    </form>
-    <div id="outputfield">
-        <p id="result"></p>
+        <div>
+            <table class="table" id="table">
+                <tr>
+                    <th class="tablehead" rowspan="2">Target</th>
+                    <th id="basehead" colspan="2">Base</th>
+                </tr>
+                <tr id="baserow">
+                    <td class="basecountry" id="s">                             <select class="custom-select my-1 mr-sm-2" id="tablebase0" onchange="tablechange('base',0)">
+                        </select>
+                    </td>
+                    <td class="basecountry">
+                        <select class="custom-select my-1 mr-sm-2" id="tablebase1" onchange="tablechange('base',1)">
+                        </select>
+                    </td>
+                </tr>
+                <tr id="0">
+                    <td class="targetcountry">
+                        <select class="custom-select my-1 mr-sm-2" id="tabletarget0" onchange="tablechange('target',0)">                   
+                        </select>
+                    </td>
+                    <td id="0r0"></td>
+                    <td id="0r1"></td>
+                </tr>
+                <tr id="1">
+                    <td class="targetcountry">
+                        <select class="custom-select my-1 mr-sm-2" id="tabletarget1" onchange="tablechange('target',1)">                   
+                        </select>
+                    </td>
+                    <td id="1r0"></td>
+                    <td id="1r1"></td>
+                </tr>
+            </table>
+        </div>
     </div>
-    <div>
-        <table class="table" id="table">
-            <tr id="baserow">
-                <th class="tablehead">Target\Base</th>
-                <td class="basecountry">USD</td>
-                <td class="basecountry">HKD</td>
-            </tr>
-            <tr id="0">
-                <td class="targetcountry">USD</td>
-                <td id="0r0"></td>
-                <td id="0r1"></td>
-            </tr>
-            <tr id="1">
-                <td class="targetcountry">HKD</td>
-                <td id="1r0"></td>
-                <td id="1r1"></td>
-            </tr>
-        </table>
+    <div id="hist"  style="display: none;">
+      <form>
+            <div class="showdiv">
+                <span class="tag">Base Currency</span>
+                <select class="custom-select my-1 mr-sm-2" id="histbase" onchange="showRate()"></select>
+                <span class="tag">Target Currency</span>
+                <select class="custom-select my-1 mr-sm-2" id="histtarget" onchange="showRate()"></select>
+                <span class="tag">Date</span>
+                <input class="form-control" type="date" value="2018-09-24" id="date-input" onchange="histinit()">
+            </div>
+        </form>
+        <div id="histoutputfield">
+            <p id="histresult"></p>
+        </div>
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="script.js"></script>
+      <script type="text/javascript" src="script.js"></script>    
     <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+
   </body>
 </html>

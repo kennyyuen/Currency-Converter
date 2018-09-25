@@ -1,3 +1,76 @@
 .display-1{
     font-size: 5vw;    
 }
+body {
+    padding: 5%;
+}
+#baseindicate {
+    color: darkgray;
+}
+#histbaseindicate {
+    color: darkgray;
+}
+
+.tag{
+    display: block;
+    padding-top: 3%;
+}
+#outputfield{
+    padding-top: 1.5%;
+}
+#histoutputfield{
+    padding-top: 1.5%;
+}
+button {
+    float: right;
+    font-size: 5vw;
+}
+.dark {
+    background: #313947;
+    color: white;
+}
+.dark input:focus {
+    background: #313947;
+    color: white;
+}
+.dark select {
+    border-color: white;
+}
+.dark select::after {
+    color: white;
+    border-top:6px solid #ffffff;
+}
+table {
+    table-layout: fixed;
+    overflow-wrap: break-word;
+    border-radius: 5px;
+    border-collapse: separate;
+    border: 1px solid #e6e9ef;
+}
+.dark th{
+    border-left: 1px solid #ffffff;
+    border-top: none;
+}
+.dark td{
+    border-left: 1px solid #ffffff;
+    border-top: 1px solid #ffffff;
+}
+td {
+    border-left: 1px solid #e6e9ef;
+}
+th {
+    border-left: 1px solid #e6e9ef;
+    border-top: none;
+}
+th:first-child, td:first-child{
+    border-left: none;
+}
+.dark #s {
+    border-left: 1px solid #ffffff;
+}
+#s {
+    border-left: 1px solid #e6e9ef;
+}
+#basehead {
+    text-align: center;
+}

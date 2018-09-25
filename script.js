@@ -1,7 +1,10 @@
 var rates = [];
 var totalcountries;
+var histtotalcountries;
 var basecountrylist = ["USD","HKD"];
 var targetcountrylist = ["USD","HKD"];
+var commonlist = ["USD","HKD","JPY","EUR","CAD"];
+var histrates = [];
 
 class Rates {
     constructor(country, rate){
@@ -19,14 +22,39 @@ function getRateByCountry(country){
     }
 }
 
+function getHistRateByCountry(country){
+    for (var i = 0;i < histtotalcountries;i++){
+        if (histrates[i].country == country){
+            return histrates[i].rate;
+        }
+    }
+}
+
 function setCountryList(id,select){
+    var common = document.createElement("optgroup");
+    common.label = "Common Currency";
+    var other = document.createElement("optgroup");;
+    other.label = "Other Currency";
+    document.getElementById(id).appendChild(common);
+    document.getElementById(id).appendChild(other);
     for(var i = 0;i < totalcountries;i++){
         var temp = document.createElement("option");
         temp.value = i;
         temp.innerHTML = rates[i].country;
         if (rates[i].country == select){
             temp.selected = 'selected'
-        }        document.getElementById(id).appendChild(temp);
+        }
+        var t;
+        for(var j = 0;j < commonlist.length;j++){
+            if(rates[i].country == commonlist[j]){
+                t = common;
+                break;
+            }
+            else{
+                t = other;
+            }
+        }        
+        t.appendChild(temp);        
     }
 }
 
@@ -58,7 +86,9 @@ function addBase(base){
         }
         
         basecountrylist.push(base);
-        console.log(basecountrylist);
+        document.getElementById("basehead").colSpan = basecountrylist.length.toString(); 
+        
+        console.log(basecountrylist.length.toString());
     }
 }
 
@@ -109,8 +139,8 @@ function setTable(){
     }
 }
 
-function getData(key){
-    var url = "http://data.fixer.io/api/latest?access_key=" + key + "&format=1";
+function getData(key,date){
+    var url = "http://data.fixer.io/api/" + date + "?access_key=" + key + "&format=1";
     $.ajax({
         type: "GET",
         url: url,
@@ -119,16 +149,50 @@ function getData(key){
             console.log("worked");
         }
     }).done(function(value){
-        console.log(value);        
-        totalcountries = Object.keys(value.rates).length;
-        for (var i = 0;i < totalcountries;i++){
-            var c = Object.keys(value.rates)[i];
-            var r = value.rates[c];
-            rates[i] = new Rates(c,r);
+        console.log(value);
+        if(date == "latest"){
+            totalcountries = Object.keys(value.rates).length;
+            for (var i = 0;i < totalcountries;i++){
+                var c = Object.keys(value.rates)[i];
+                var r = value.rates[c];
+                rates[i] = new Rates(c,r);
+            }
+            setCountryList("base","HKD");
+            setCountryList("target","USD");
+            setCountryList("tablebase0","USD");
+            setCountryList("tabletarget0","USD");
+            setCountryList("tablebase1","HKD");
+            setCountryList("tabletarget1","HKD");
+            showResult();
         }
-        setCountryList("base","HKD");
-        setCountryList("target","USD");
+        else{
+            histrates = [];
+            histtotalcountries = Object.keys(value.rates).length;
+            for (var i = 0;i < histtotalcountries;i++){
+                var c = Object.keys(value.rates)[i];
+                var r = value.rates[c];
+                histrates[i] = new Rates(c,r);
+            }
+            document.getElementById("histbase").innerHTML = "";
+            document.getElementById("histtarget").innerHTML= "";
+            setCountryList("histbase","HKD");
+            setCountryList("histtarget","USD");
+            showRate();
+        }
     });
+}
+
+function showRate(){
+    var bCountry = document.getElementById("histbase").options[document.getElementById("histbase").selectedIndex].text;
+    var tCountry = document.getElementById("histtarget").options[document.getElementById("histtarget").selectedIndex].text;
+    var brate = getHistRateByCountry(bCountry);
+    console.log(brate);
+    var trate = getHistRateByCountry(tCountry);
+    var r = (1 * brate / trate).toFixed(2);
+    var baseicon = "<img height='30' width='30' alt='' src='images/" + bCountry + ".png'/>";
+    var taricon = "<img height='30' width='30' alt='' src='images/" + tCountry + ".png'/>";
+    document.getElementById("histresult").innerHTML = baseicon + "<span id='histbaseindicate'>  " + bCountry + "1  = </span>" + taricon + " " + tCountry + " " + r;
+    
 }
 
 function showResult(){
@@ -138,7 +202,9 @@ function showResult(){
     var trate = rates[tCountryid].rate;
     var a = $('#amount').val();
     var r = (a * brate / trate).toFixed(2);
-    document.getElementById("result").innerHTML = r;
+    var baseicon = "<img height='30' width='30' alt='' src='images/" + rates[bCountryid].country + ".png'/>";
+    var taricon = "<img height='30' width='30' alt='' src='images/" + rates[tCountryid].country + ".png'/>";
+    document.getElementById("result").innerHTML = baseicon + "<span id='baseindicate'>  " + rates[bCountryid].country + " " + a + " = </span>" + taricon + " " + rates[tCountryid].country + " " + r;
 }
 
 function loadJSON(callback){
@@ -153,10 +219,81 @@ function loadJSON(callback){
     handler.send(null);
 }
 
+function changeTheme(){
+    var bt = document.getElementById("theme");
+    if (bt.innerHTML == "Dark"){
+        bt.innerHTML = "Light";
+        bt.className = "btn btn-light";
+        document.getElementById("bar").className = "navbar navbar-expand-lg navbar-dark bg-dark";
+        $('body').toggleClass('dark');
+        $('#amount').toggleClass('dark');
+        $('#base').toggleClass('dark');
+        $('#target').toggleClass('dark');
+        $('#tablebase0').toggleClass('dark');
+        $('#tablebase1').toggleClass('dark');
+        $('#tabletarget0').toggleClass('dark');
+        $('#tabletarget1').toggleClass('dark');
+        $('#histbase').toggleClass('dark');
+        $('#histtarget').toggleClass('dark');
+        $('#date-input').toggleClass('dark');
+    }
+    else{
+        bt.innerHTML = "Dark";
+        bt.className = "btn btn-dark";
+        document.getElementById("bar").className = "navbar navbar-expand-lg navbar-light bg-light";
+        $('body').toggleClass('dark');
+        $('#amount').toggleClass('dark');
+        $('#base').toggleClass('dark');
+        $('#target').toggleClass('dark');
+        $('#tablebase0').toggleClass('dark');
+        $('#tablebase1').toggleClass('dark');
+        $('#tabletarget0').toggleClass('dark');
+        $('#tabletarget1').toggleClass('dark');
+        $('#histbase').toggleClass('dark');
+        $('#histtarget').toggleClass('dark');
+        $('#date-input').toggleClass('dark');
+    }
+    console.log("clicked");
+}
+
+function historyclicked(){
+    document.getElementById("home").style.display = 'none';
+    document.getElementById("barhome").className = "nav-item nav-link";
+    document.getElementById("barhis").className = "nav-item nav-link active";
+    document.getElementById("hist").style.display = 'block';
+    histinit();    
+}
+
+function homeclicked(){
+    document.getElementById("home").style.display = 'block';
+    document.getElementById("barhome").className = "nav-item nav-link active";
+    document.getElementById("barhis").className = "nav-item nav-link";
+    document.getElementById("hist").style.display = 'none';
+}
+
+function tablechange(id,n){
+    if(id == "base"){
+        basecountrylist[n] = rates[$('#tablebase'+ n).val()].country;
+        setTable();
+    }
+    else {
+        targetcountrylist[n] = rates[$('#tabletarget'+ n).val()].country;
+        setTable();
+    }
+}
+
+function histinit(){
+    loadJSON(function(response){
+        var p = JSON.parse(response);
+        var date = $('#date-input').val();
+        getData(p.key,date);
+    });
+}
+
 function init(){
     loadJSON(function(response){
         var p = JSON.parse(response);
-        getData(p.key);
+        getData(p.key,"latest");
     });
 }
 
