@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+      
+    <link rel="stylesheet" href="style.css">
+    <title>Multi-Currency Converter</title>
+  </head>
+  <body>
+    <h1 class="display-1">Multi-Currency Converter</h1>
+    <form>
+        <span>Amount</span>
+        <div id="inputfield">
+            <input type="number" id="amount" min="0" class="form-control" placeholder="Amount" onkeyup="setTable()">
+        </div>
+        <div class="showdiv">
+            <span class="tag">Base Country</span>
+            <select class="custom-select my-1 mr-sm-2" id="base" onchange="countryChanged('base')"></select>
+            <span class="tag">Target Country</span>
+            <select class="custom-select my-1 mr-sm-2" id="target" onchange="countryChanged('target')"></select>
+        </div>
+    </form>
+    <div id="outputfield">
+        <p id="result"></p>
+    </div>
+    <div>
+        <table class="table" id="table">
+            <tr id="baserow">
+                <th class="tablehead">Target\Base</th>
+                <td class="basecountry">USD</td>
+                <td class="basecountry">HKD</td>
+            </tr>
+            <tr id="0">
+                <td class="targetcountry">USD</td>
+                <td id="0r0"></td>
+                <td id="0r1"></td>
+            </tr>
+            <tr id="1">
+                <td class="targetcountry">HKD</td>
+                <td id="1r0"></td>
+                <td id="1r1"></td>
+            </tr>
+        </table>
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
+  </body>
+</html>
