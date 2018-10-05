@@ -23,7 +23,10 @@ body {
 }
 button {
     float: right;
-    font-size: 5vw;
+    padding: -5px;
+}
+.navbar-nav a{
+    padding-right: 10px;
 }
 .dark {
     background: #313947;

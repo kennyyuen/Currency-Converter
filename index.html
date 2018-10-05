@@ -10,6 +10,7 @@
 
       
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dropdown.css">
     <title>Multi-Currency Converter</title>
   </head>
   <body>
@@ -28,6 +29,19 @@
         
       </nav>
       <div id="home">
+        <div class="dropdown">
+        <button id="bt" onclick="myFunction()" class="dropbtn">Dropdown</button>
+          <div id="myDropdown" class="dropdown-content">
+            <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+            <a id="1" href="#" onclick="clicked(this.id);">About</a>
+            <a id="2" href="#" onclick="clicked(this.id);">Base</a>
+            <a href="#">Blog</a>
+            <a href="#">Contact</a>
+            <a href="#">Custom</a>
+            <a href="#">Support</a>
+            <a href="#">Tools</a>
+          </div>
+        </div>
         <form>
             <span class="tag">Amount</span>
             <div id="inputfield">
@@ -97,7 +111,8 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-      <script type="text/javascript" src="script.js"></script>    
+    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="dropdown.js"></script>
     <script type="text/javascript" src="jquery-3.3.1.min.js"></script>
 
   </body>
