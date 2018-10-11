@@ -30,102 +30,106 @@
       </nav>
       <div id="home">
         <div>
-            <input type="number" id="amount" min="0" class="form-control" placeholder="Amount" onkeyup="">
-            <button type="button" class="btn btn-secondary" onclick="orienClicked()">
-                <img src="images/orientation.svg" >
-                <span class="hide">
-                    Orientation
-                </span>                
+            <input type="number" id="amount" min="0" class="form-control" placeholder="Amount" onkeyup="showResult()">
+            <button type="button" id="addColumn" class="btn btn-secondary" onclick="dropDownClicked('bDrop')">
+                <span class="plus">+ B<span class="hide">ase</span></span>
+            </button>            
+            <button type="button" id="addRow" class="btn btn-secondary" onclick="dropDownClicked('tDrop')">
+                <span class="plus">+ T<span class="hide">arget</span></span>
             </button>
         </div>
-        <!--
-        <div>
-            <div class="dropdown">
-                <button id="bButton" onclick="dropDownClicked('bDrop')" class="dropbtn">Base Currency</button>
-                <div id="bDrop" class="dropdown-content">
-                    <input type="text" placeholder="Search.." id="bInput" class="dropdown-search" onkeyup="filterFunction('bDrop','bInput')">
-                </div>
+        <div id="bDrop" class="dropdown-content">
+            <input type="text" placeholder="Search.." id="bInput" class="dropdown-search" onkeyup="filterFunction('bList','bInput')">
+            <button type="button" class="cancel btn-lg btn btn-danger" onclick="cancelClicked('bDrop')">X</button>
+            <div class="list" id="bList">
             </div>
         </div>
-        <div>
-            <div class="dropdown">
-                <button id="tButton" onclick="dropDownClicked('tDrop')" class="dropbtn">target Currency</button>
-                <div id="tDrop" class="dropdown-content">
-                    <input type="text" placeholder="Search.." id="tInput" class="dropdown-search" onkeyup="filterFunction('tDrop','tInput')">
-                </div>
+        <div id="tDrop" class="dropdown-content">
+            <input type="text" placeholder="Search.." id="tInput" class="dropdown-search" onkeyup="filterFunction('tList','tInput')">
+            <button type="button" class="cancel btn-lg btn btn-danger" onclick="cancelClicked('tDrop')">X</button>
+            <div class="list" id="tList">
             </div>
         </div>
-        -->
-        <div class="content-holder">
-            <div class="table-responsive d-inline">
+        <div class="content-holder">            
+            <div class="table-responsive">
                 <table class="table" id="table">                    
                     <tr id="baserow">
                         <td class="text-center">
                             <span id="indicateimage">🡣</span>
                         </td>
-                        <td class="basecountry" id="cUSD">                             
-                            <button type="button" class="countrybtn btn btn-light" onclick="">
-                                <img src="https://www.countryflags.io/us/flat/32.png">
+                        <td class="basecountry" id="0USD">                             
+                            <button type="button" class="countrybtn btn btn-light" onclick="hideColumn(this)">
+                                <span class="hide">
+                                    <img src="https://www.countryflags.io/us/flat/32.png">
+                                </span>
                                 USD
-                                <img class="trashcan" src="images/delete.png">
-                                <img class="trashcan-dark" src="images/delete_dark.png">
+                                <span class="hide">
+                                    <img class="trashcan" src="images/delete.png">
+                                    <img class="trashcan-dark" src="images/delete_dark.png">
+                                </span>
                             </button>
                         </td>
-                        <td class="basecountry" id="cHKD">
-                            <button type="button" class="countrybtn btn btn-light" onclick="">
-                                <img src="https://www.countryflags.io/hk/flat/32.png">
+                        <td class="basecountry" id="1HKD">
+                            <button type="button" class="countrybtn btn btn-light" onclick="hideColumn(this)">
+                                <span class="hide">
+                                    <img src="https://www.countryflags.io/hk/flat/32.png">
+                                </span>
                                 HKD
-                                <img class="trashcan" src="images/delete.png">
-                                <img class="trashcan-dark" src="images/delete_dark.png">
+                                <span class="hide">
+                                    <img class="trashcan" src="images/delete.png">
+                                    <img class="trashcan-dark" src="images/delete_dark.png">
+                                </span>
                             </button>
                         </td>
                     </tr>
-                    <tr id="0">
+                    <tr id="r0">
                         <td class="targetcountry" id="rUSD">
-                            <button type="button" class="countrybtn btn btn-light" onclick="">
-                                <img src="https://www.countryflags.io/us/flat/32.png">
+                            <button type="button" class="countrybtn btn btn-light" onclick="hideRow(this)">
+                                <span class="hide">
+                                    <img src="https://www.countryflags.io/us/flat/32.png">
+                                </span>
                                 USD
-                                <img class="trashcan" src="images/delete.png">
-                                <img class="trashcan-dark" src="images/delete_dark.png">
+                                <span class="hide">
+                                    <img class="trashcan" src="images/delete.png">
+                                    <img class="trashcan-dark" src="images/delete_dark.png">
+                                </span>
                             </button>
                         </td>
-                        <td id="0r0"></td>
-                        <td id="0r1"></td>
+                        <td id="0r0" class="value"></td>
+                        <td id="0r1" class="value"></td>
                     </tr>
-                    <tr id="1">
+                    <tr id="r1">
                         <td class="targetcountry" id="rHKD">
-                            <button type="button" class="countrybtn btn btn-light" onclick="">
-                                <img src="https://www.countryflags.io/hk/flat/32.png">
+                            <button type="button" class="countrybtn btn btn-light" onclick="hideRow(this)">
+                                <span class="hide">
+                                    <img src="https://www.countryflags.io/hk/flat/32.png">
+                                </span>
                                 HKD
-                                <img class="trashcan" src="images/delete.png">
-                                <img class="trashcan-dark" src="images/delete_dark.png">
+                                <span class="hide">
+                                    <img class="trashcan" src="images/delete.png">
+                                    <img class="trashcan-dark" src="images/delete_dark.png">
+                                </span>
                             </button>
                         </td>
-                        <td id="1r0"></td>
-                        <td id="1r1"></td>
+                        <td id="1r0" class="value"></td>
+                        <td id="1r1" class="value"></td>
                     </tr>
                 </table>                
-            </div>
-            <button type="button" id="addColumn" class="btn btn-secondary">
-                <span class="plus">+</span>
-            </button>
-            <button type="button" id="addRow" class="btn btn-secondary">
-                <span class="plus">+</span>
-            </button>
+            </div>                        
         </div>
     </div>
     <div id="hist"  style="display: none;">
       <form>
             <div class="showdiv">
-                <span class="tag">Base Currency</span>
+                <span class="histtag">Base Currency</span>
                 <select class="custom-select my-1 mr-sm-2" id="histbase" onchange="showRate()"></select>
-                <span class="tag">Target Currency</span>
+                <span class="histtag">Target Currency</span>
                 <select class="custom-select my-1 mr-sm-2" id="histtarget" onchange="showRate()"></select>
-                <span class="tag">Date</span>
+                <span class="histtag">Date</span>
                 <input class="form-control" type="date" value="2018-09-24" id="date-input" onchange="init('hist')">
             </div>
         </form>
-        <div id="histoutputfield">
+        <div class="showdiv" id="histoutputfield">
             <p id="histresult"></p>
         </div>
     </div>

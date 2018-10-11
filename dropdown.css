@@ -16,9 +16,8 @@
 
 .dropdown-search {
     border-box: box-sizing;
-    background-image: url('searchicon.png');
     background-position: 14px 12px;
-    width: 87vw;
+    width: 82vw;
     background-repeat: no-repeat;
     font-size: 16px;
     padding: 14px 20px 12px 45px;
@@ -35,22 +34,30 @@
 
 .dropdown-content {
     display: none;
-    position: absolute;
+    position: fixed;
     background-color: #f6f6f6;
-    min-width: 88vw;
-    overflow-y: scroll;
-    max-height: 60vh;
+    min-width: 88vw;    
     border: 1px solid #ddd;
     z-index: 1;
 }
 
-.dropdown-content a {
+.list a {
     color: black;
     padding: 12px 16px;
     text-decoration: none;
     display: block;
+    cursor: pointer;
 }
 
-.dropdown a:hover {background-color: #ddd;}
+.list a:hover {background-color: #ddd;}
 
 .show {display: block;}
+
+.list {
+    overflow-y: scroll;
+    max-height: 60vh;
+}
+.cancel {
+    border-radius: 0;
+    vertical-align: top;
+}

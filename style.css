@@ -48,10 +48,10 @@ body {
 }
 #amount {
     width: 100%;
-    max-width: 230px;
+    max-width: 210px;
     box-sizing: border-box;
     float: left;
-    margin-right: 20px;
+    margin-right: 10px;
 }
 @media screen and (max-width:800px){
     .hide {
@@ -65,11 +65,9 @@ body {
 /* Table */
 #table {
     margin-top: 20px;
-    display: inline;
     overflow-wrap: break-word;
 }
 .content-holder {
-    display: inline-block;
     margin-top: 15px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -81,19 +79,31 @@ body {
 }
 #addColumn {
     display: inline-block;
-    margin: 10px;
-    float: right;
 }
 #addRow {
-    margin: 10px;
-    display: block;
+    margin-left: 10px;
+    display: inline-block;
 }
 .trashcan-dark{
     display: none;
 }
+.value {
+}
+.value:hover {
+    background-color: grey;
+    color: white;
+}
+.countrybtn {
+    text-align: center;
+}
 /* Historical page */
 #histoutputfield{
     padding-top: 1.5%;
+}
+.showdiv {    
+    padding-top: 5%;
+    padding-left: 5%;
+    padding-right: 5%;
 }
 
 /* Dark mode */

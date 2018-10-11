@@ -3,7 +3,10 @@ var totalcountries;
 var histtotalcountries;
 var basecountrylist = ["USD","HKD"];
 var targetcountrylist = ["USD","HKD"];
+var basecalc = ["USD","HKD"];
+var tarcalc = ["USD","HKD"];
 var commonlist = ["USD","HKD","JPY","EUR","CAD"];
+var deletedcolumn = [];
 var histrates = [];
 
 //rates class
@@ -39,19 +42,20 @@ function getHistRateByCountry(country){
 }
 
 //Dropdown function
-function setDropDownList(id,parentID){
-    var div = document.getElementById(id);
+function setDropDownList(id, orient){
+    var span = document.getElementById(id);
     for(var i = 0;i < totalcountries;i++){
         var temp = document.createElement("a");
         var image = "<img class='flag' alt='' src='https://www.countryflags.io/"+ rates[i].code + "/flat/32.png'>";
         if(rates[i].code == "BTC"){
-            image = "<img src='images/BTC.png'>";
+            image = "<img class='flag' src='images/BTC.png'>";
         }
         temp.id = i;
         temp.innerHTML = image + rates[i].country;
-        temp.onclick = listClicked;
-        temp.setAttribute("parentButtonID",parentID);  
-        div.appendChild(temp);
+        temp.onclick = listClicked; 
+        temp.setAttribute("country",rates[i].country);
+        
+        span.appendChild(temp);
     }
 }
 // dropdown button
@@ -60,9 +64,13 @@ function dropDownClicked(id) {
 }
 // dropdown list clicked
 function listClicked(){
-    console.log(this.id);
-    document.getElementById(this.getAttribute("parentButtonID")).innerHTML = document.getElementById(this.id).innerHTML;
-    document.getElementById(this.parentNode.id).classList.toggle("show");
+    console.log(this.id); 
+    document.getElementById(this.parentNode.parentNode.id).classList.toggle("show");
+    if(this.parentNode.parentNode.id == "bDrop")
+        addBase(this.id);
+    else 
+        addTarget(this.id);
+    showResult();
 }
 // dropdown search function
 function filterFunction(dropdowndivID,inputID) {
@@ -72,12 +80,16 @@ function filterFunction(dropdowndivID,inputID) {
     div = document.getElementById(dropdowndivID);
     a = div.getElementsByTagName("a");
     for (i = 0; i < a.length; i++) {
-        if (a[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+        if (a[i].getAttribute("country").toUpperCase().indexOf(filter) > -1) {
             a[i].style.display = "";
         } else {
             a[i].style.display = "none";
         }
     }
+}
+// dropdown cancel button
+function cancelClicked(id){
+    document.getElementById(id).classList.toggle("show");
 }
 
 function setCountryList(id,select){
@@ -118,76 +130,146 @@ function calRate(base,target){
 }
 
 //table function
-function addBase(base){
+function addBase(id){
     var flag = false;
     for (var i = 0;i < basecountrylist.length;i++){
-        if(basecountrylist[i] == base){
+        if(basecountrylist[i] == rates[id].country){
             flag = true;
             return;
         }
     }
     if(!flag){
         var temp = document.createElement("td");
-        temp.innerHTML = base;
         temp.className = "basecountry";
+        temp.id = basecalc.length + rates[id].country;
         document.getElementById("baserow").appendChild(temp);
-        for(var i = 0;i < targetcountrylist.length;i++){
+        
+        var bn = document.createElement("button");
+        bn.type = "button";
+        if(document.getElementById("theme").innerHTML == "Dark")
+            bn.className = "countrybtn btn btn-light";
+        else
+            bn.className = "countrybtn btn btn-dark";
+        bn.onclick = function(){hideColumn(this)};
+        temp.appendChild(bn);
+        
+        var span1 = document.createElement("span");
+        span1.className = "hide";
+        bn.appendChild(span1);
+        
+        var countryflag = document.createElement("img");
+        countryflag.src = "https://www.countryflags.io/" + rates[id].code + "/flat/32.png";
+        countryflag.alt = "";
+        span1.appendChild(countryflag);
+        
+        bn.innerHTML += "  " + rates[id].country;
+        
+        var span2 = document.createElement("span");
+        span2.className = "hide";
+        bn.appendChild(span2);
+        
+        var can = document.createElement("img");
+        can.src = "images/delete.png";
+        can.className = "trashcan";
+        if(document.getElementById("theme").innerHTML == "Dark")
+            can.style.display = "initial";
+        else
+            can.style.display = "none";
+        var canDark = document.createElement("img");
+        canDark.src = "images/delete_dark.png";
+        canDark.className = "trashcan-dark";
+        if(document.getElementById("theme").innerHTML == "Dark")
+            canDark.style.display = "none";
+        else
+            canDark.style.display = "initial";
+        span2.appendChild(can);
+        span2.appendChild(canDark);
+        
+        
+        for(var i = 0;i < tarcalc.length;i++){
             var t = document.createElement("td");
-            t.id = i+"r"+basecountrylist.length;
-            document.getElementById(i).appendChild(t);
+            t.id = i+"r"+basecalc.length;
+            t.className = "value";
+            var r = document.getElementById("r" + i);
+            if(r != null){
+                r.appendChild(t);
+            }
         }
         
-        basecountrylist.push(base);
-        document.getElementById("basehead").colSpan = basecountrylist.length.toString(); 
-        
-        console.log(basecountrylist.length.toString());
+        basecountrylist.push(rates[id].country);
+        basecalc.push(rates[id].country);
     }
 }
 
-function countryChanged(side){
-    showResult();
-    var countryid = document.getElementById(side).value;
-    if(side == "base")
-        addBase(rates[countryid].country);
-    else
-        addTarget(rates[countryid].country);
-    setTable();
-}
-
-function addTarget(target){
+function addTarget(id){
     var flag = false;
     for (var i = 0;i < targetcountrylist.length;i++){
-        if(targetcountrylist[i] == target){
+        if(targetcountrylist[i] == rates[id].country){
             flag = true;
             return;
         }
     }
     if(!flag){
         var newRow = document.createElement("tr");
-        newRow.id = targetcountrylist.length;
+        newRow.id = "r" + tarcalc.length;
         document.getElementById("table").appendChild(newRow);
+        
         var temp = document.createElement("td");
-        temp.innerHTML = target;
         temp.className = "targetcountry";
+        temp.id = "r" + rates[id].country;
         newRow.appendChild(temp);
-        for (var i = 0;i < basecountrylist.length;i++){
+        
+        var bn = document.createElement("button");
+        bn.type = "button";
+        if(document.getElementById("theme").innerHTML == "Dark")
+            bn.className = "countrybtn btn btn-light";
+        else
+            bn.className = "countrybtn btn btn-dark";
+        bn.onclick = function(){hideRow(this)};
+        temp.appendChild(bn);
+        
+        var span1 = document.createElement("span");
+        span1.className = "hide";
+        bn.appendChild(span1);
+        
+        var countryflag = document.createElement("img");
+        countryflag.src = "https://www.countryflags.io/" + rates[id].code + "/flat/32.png";
+        countryflag.alt = "";
+        span1.appendChild(countryflag);
+        
+        bn.innerHTML += "  " + rates[id].country;
+        
+        var span2 = document.createElement("span");
+        span2.className = "hide";
+        bn.appendChild(span2);
+        
+        var can = document.createElement("img");
+        can.src = "images/delete.png";
+        can.className = "trashcan";
+        if(document.getElementById("theme").innerHTML == "Dark")
+            can.style.display = "initial";
+        else
+            can.style.display = "none";
+        var canDark = document.createElement("img");
+        canDark.src = "images/delete_dark.png";
+        canDark.className = "trashcan-dark";
+        if(document.getElementById("theme").innerHTML == "Dark")
+            canDark.style.display = "none";
+        else
+            canDark.style.display = "initial";
+        span2.appendChild(can);
+        span2.appendChild(canDark);
+        
+        for (var i = 0;i < basecalc.length;i++){
             var t = document.createElement("td");
-            t.id = targetcountrylist.length+"r"+i;
-            newRow.appendChild(t);
+            t.id = tarcalc.length+"r"+i;
+            t.className = "value";
+            if(deletedcolumn.indexOf(i.toString()) == -1)
+                newRow.appendChild(t);
         }
-        targetcountrylist.push(target);
-        console.log(targetcountrylist);
-    }
-}
-
-function setTable(){
-    showResult();
-    //target
-    for(var i = 0;i < targetcountrylist.length;i++){
-        //base
-        for(var j = 0;j < basecountrylist.length;j++){
-            document.getElementById(i+"r"+j).innerHTML = calRate(basecountrylist[j],targetcountrylist[i]);
-        }
+        targetcountrylist.push(rates[id].country);
+        tarcalc.push(rates[id].country);
+        
     }
 }
 
@@ -199,25 +281,24 @@ function showRate(){
     console.log(brate);
     var trate = getHistRateByCountry(tCountry);
     var r = (1 * brate / trate).toFixed(2);
-    var baseicon = "<img height='30' width='30' alt='' src='images/" + bCountry + ".png'/>";
-    var taricon = "<img height='30' width='30' alt='' src='images/" + tCountry + ".png'/>";
+    var baseicon = "<img alt='' src='https://www.countryflags.io/" + bCountry.substring(0,2) + "/flat/32.png'/>";
+    var taricon = "<img alt='' src='https://www.countryflags.io/" + tCountry.substring(0,2) + "/flat/32.png'/>";
     document.getElementById("histresult").innerHTML = baseicon + "<span id='histbaseindicate'>  " + bCountry + "1  = </span>" + taricon + " " + tCountry + " " + r;
     
 }
-
+// Show Calculated result
 function showResult(){
-    /*
-    var bCountryid = $('#base').val();
-    var tCountryid = $('#target').val();
-    var brate = rates[bCountryid].rate;
-    var trate = rates[tCountryid].rate;
-    var a = $('#amount').val();
-    var r = (a * brate / trate).toFixed(2);
-    var baseicon = "<img height='30' width='30' alt='' src='images/" + rates[bCountryid].country + ".png'/>";
-    var taricon = "<img height='30' width='30' alt='' src='images/" + rates[tCountryid].country + ".png'/>";
-    document.getElementById("result").innerHTML = baseicon + "<span id='baseindicate'>  " + rates[bCountryid].country + " " + a + " = </span>" + taricon + " " + rates[tCountryid].country + " " + r;
-    */
-    
+    //target
+    for(var i = 0;i < tarcalc.length;i++){
+        //base
+        for(var j = 0;j < basecalc.length;j++){
+            var temp = document.getElementById(i+"r"+j);
+            if(temp != null){
+                temp.innerHTML = calRate(basecalc[j],tarcalc[i]);
+                console.log(temp.id);
+            }
+        }
+    }   
     
 }
 
@@ -240,27 +321,28 @@ function tabClicked(tab){
     }
         
 }
-
-//orientation button
-function orienClicked(){
-    var image = document.getElementById("indicateimage");
-    if(image.innerHTML == "🡣") {
-        image.innerHTML = "🡢";
-    }
-    else {
-        image.innerHTML = "🡣";
-    }
+//delete row
+function hideRow(btn){
+    console.log(btn.parentNode.parentNode.id);
+    var ele = document.getElementById(btn.parentNode.parentNode.id);
+    ele.parentNode.removeChild(ele);
+    var temp = btn.parentNode.id.substring(1,4);
+    targetcountrylist.splice( targetcountrylist.indexOf(temp),1);
 }
-
-function tablechange(id,n){
-    if(id == "base"){
-        basecountrylist[n] = rates[$('#tablebase'+ n).val()].country;
-        setTable();
+//delete column
+function hideColumn(btn){
+    var c = btn.parentNode.id.substring(1,4);
+    var col = btn.parentNode.id.substring(0,1);
+    for(var i = 0;i < tarcalc.length;i++){
+        var cell = document.getElementById(i+"r"+col);
+        var row = document.getElementById("r"+i);
+        if(row != null)
+            if(cell != null)
+                row.removeChild(cell);
     }
-    else {
-        targetcountrylist[n] = rates[$('#tabletarget'+ n).val()].country;
-        setTable();
-    }
+    document.getElementById("baserow").removeChild(btn.parentNode);
+    deletedcolumn.push(col);
+    basecountrylist.splice( basecountrylist.indexOf(c),1);
 }
 
 //initialize function
@@ -308,8 +390,8 @@ function getData(key,date){
                 var r = value.rates[c];
                 rates[i] = new Rates(c,r);
             }            
-            //setDropDownList("bDrop","bButton");
-            //setDropDownList("tDrop","tButton");
+            setDropDownList("bList","base");
+            setDropDownList("tList","target");
             showResult();
         }
         else{
@@ -356,6 +438,9 @@ function changeTheme(){
         $('#histbase').toggleClass('dark');
         $('#histtarget').toggleClass('dark');
         $('#date-input').toggleClass('dark');
+        $('#tInput').toggleClass('dark');
+        $('#bInput').toggleClass('dark');
+        $('.list').toggleClass('dark');
     }
     else{
         bt.innerHTML = "Dark";
@@ -380,6 +465,9 @@ function changeTheme(){
         $('#histbase').toggleClass('dark');
         $('#histtarget').toggleClass('dark');
         $('#date-input').toggleClass('dark');
+        $('#tInput').toggleClass('dark');
+        $('#bInput').toggleClass('dark');
+        $('.list').toggleClass('dark');
     }
     console.log("clicked");
 }
