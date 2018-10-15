@@ -8,6 +8,8 @@ var tarcalc = ["USD","HKD"];
 var commonlist = ["USD","HKD","JPY","EUR","CAD"];
 var deletedcolumn = [];
 var histrates = [];
+var storedDate;
+var storedMonth;
 
 //rates class
 class Rates {
@@ -26,7 +28,7 @@ class Rates {
 
 //Get rate function
 function getRateByCountry(country){
-    for (var i = 0;i < totalcountries;i++){
+;    for (var i = 0;i < totalcountries;i++){
         if (rates[i].country == country){
             return rates[i].rate;
         }
@@ -134,7 +136,8 @@ function addBase(id){
     var flag = false;
     for (var i = 0;i < basecountrylist.length;i++){
         if(basecountrylist[i] == rates[id].country){
-            flag = true;
+            flag = true;            
+            toggleAlert();
             return;
         }
     }
@@ -206,6 +209,7 @@ function addTarget(id){
     for (var i = 0;i < targetcountrylist.length;i++){
         if(targetcountrylist[i] == rates[id].country){
             flag = true;
+            toggleAlert();
             return;
         }
     }
@@ -351,7 +355,27 @@ function init(temp){
         var p = JSON.parse(response);
         var date = $('#date-input').val();
         if(temp == "latest"){
-            getData(p.key,"latest");
+            var d = new Date();
+            var mon = d.getMonth();
+            var date = d.getDate();
+            storedMonth = localStorage.getItem("month");
+            storedDate = localStorage.getItem("date");
+            if(mon == storedMonth && date == storedDate){
+                rates = JSON.parse(localStorage.getItem('rate'));
+                totalcountries = localStorage.getItem('total');
+                console.log("load cache");
+                if(rates == null)
+                    getData(p.key,"latest");
+                setDropDownList("bList","base");
+                setDropDownList("tList","target");
+                showResult();
+                //console.log(rates[0].rate);
+            }
+            else{
+                localStorage.setItem("month",mon);
+                localStorage.setItem("date",date);
+                getData(p.key,"latest");
+            }
         }
         else {
             getData(p.key,date);
@@ -389,7 +413,10 @@ function getData(key,date){
                 var c = Object.keys(value.rates)[i];
                 var r = value.rates[c];
                 rates[i] = new Rates(c,r);
-            }            
+            }
+            localStorage['rate'] = JSON.stringify(rates);
+            localStorage['total'] = totalcountries;
+            console.log(JSON.parse(localStorage.getItem('rate')));
             setDropDownList("bList","base");
             setDropDownList("tList","target");
             showResult();
@@ -472,6 +499,30 @@ function changeTheme(){
     console.log("clicked");
 }
 
-$(document).ready(function(){
+//Alert function
+function toggleAlert(){    
+    var temp = "<div class='alert alert-warning alert-dismissible' id='warning'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><strong>Warning!</strong> You have already added this currency.</div>"
+    document.getElementById("alert-holder").innerHTML = temp;
+}
+
+$(document).ready(function(){    
     init("latest");
+    
+    //mouse event function
+    $('#table:has(td)').mouseover(function(e){
+        var cell = $(e.target).closest("td");
+        if(isNaN(cell.text()) == false){
+            console.log(cell.attr('id'));
+            var b = parseInt(cell.attr('id').split('r')[1]);
+            var t = parseInt(cell.attr('id').split('r')[0]);
+            var bCountry = basecalc[b];
+            var tCountry = tarcalc[t];
+            var html = bCountry + " " + $('#amount').val() + " = <span id='black'>" + tCountry + " " + cell.text() + "</span>"; 
+            $("#showHover").html(html);
+        }
+    });
+    
+    $('#table:has(td)').mouseout(function(){
+        $("#showHover").html("");
+    });
 });

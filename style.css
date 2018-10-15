@@ -4,6 +4,19 @@
 body {
     padding: ;
 }
+/* hover text */
+#showHover {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: grey;
+    font-size: 15px;
+    height: 30px;
+    white-space: pre;
+}
+#black {
+    color:darkorange;
+    font-size: 25px;
+}
 /* nav bar */
 #theme {    /* Theme mode button */
     float: right;
