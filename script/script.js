@@ -397,7 +397,7 @@ function loadJSON(callback){
 }
 
 function getData(key,date){
-    var url = "https://data.fixer.io/api/" + date + "?access_key=" + key + "&format=1";
+    var url = "http://data.fixer.io/api/" + date + "?access_key=" + key + "&format=1";
     $.ajax({
         type: "GET",
         url: url,
