@@ -28,7 +28,7 @@ class Rates {
 
 //Get rate function
 function getRateByCountry(country){
-;    for (var i = 0;i < totalcountries;i++){
+    for (var i = 0;i < totalcountries;i++){
         if (rates[i].country == country){
             return rates[i].rate;
         }
@@ -74,7 +74,6 @@ function showResult(){
             var temp = document.getElementById(i+"r"+j);
             if(temp != null){
                 temp.innerHTML = calRate(basecalc[j],tarcalc[i]);
-                console.log(temp.id);
             }
         }
     }       
@@ -153,77 +152,10 @@ function addBase(id){
     }
 }
 
-// dropdown list clicked
-function listClicked(){
-    document.getElementById(this.parentNode.parentNode.id).classList.toggle("show");
-    if(this.parentNode.parentNode.id == "bDrop")
-        addBase(this.id);
-    else 
-        addTarget(this.id);
-    showResult();
-}
-// dropdown search function
-function filterFunction(dropdowndivID,inputID) {
-    var input, filter, ul, li, a, i;
-    input = document.getElementById(inputID);
-    filter = input.value.toUpperCase();
-    div = document.getElementById(dropdowndivID);
-    a = div.getElementsByTagName("a");
-    for (i = 0; i < a.length; i++) {
-        if (a[i].getAttribute("country").toUpperCase().indexOf(filter) > -1) {
-            a[i].style.display = "";
-        } else {
-            a[i].style.display = "none";
-        }
-    }
-}
-
-// dropdown cancel button
-function cancelClicked(id){
-    document.getElementById(id).classList.toggle("show");
-}
-
-function setCountryList(id,select){
-    var common = document.createElement("optgroup");
-    common.label = "Common Currency";
-    var other = document.createElement("optgroup");;
-    other.label = "Other Currency";
-    document.getElementById(id).appendChild(common);
-    document.getElementById(id).appendChild(other);
-    for(var i = 0;i < totalcountries;i++){
-        var temp = document.createElement("option");
-        temp.value = i;
-        temp.innerHTML = rates[i].country;
-        if (rates[i].country == select){
-            temp.selected = 'selected';
-        }
-        var t;
-        for(var j = 0;j < commonlist.length;j++){
-            if(rates[i].country == commonlist[j]){
-                t = common;
-                break;
-            }
-            else{
-                t = other;
-            }
-        }        
-        t.appendChild(temp);        
-    }
-}
-
-//calucate function
-function calRate(base,target){
-    var brate = getRateByCountry(base);
-    var trate = getRateByCountry(target);
-    var a = $("#amount").val();
-    var r = a * brate / trate;
-    return r.toFixed(2);
-}
-
 function addTarget(id){
     var flag = false;
     for (var i = 0;i < targetcountrylist.length;i++){
-        if(targetcountrylist[i] == rates[id].country){
+        if(targetcountrylist[i] === rates[id].country){
             flag = true;
             toggleAlert();
             return;
@@ -241,7 +173,7 @@ function addTarget(id){
         
         var bn = document.createElement("button");
         bn.type = "button";
-        if(document.getElementById("theme").innerHTML == "Dark")
+        if(document.getElementById("theme").innerHTML === "Dark")
             bn.className = "countrybtn btn btn-light";
         else
             bn.className = "countrybtn btn btn-dark";
@@ -266,14 +198,14 @@ function addTarget(id){
         var can = document.createElement("img");
         can.src = "images/delete.png";
         can.className = "trashcan";
-        if(document.getElementById("theme").innerHTML == "Dark")
+        if(document.getElementById("theme").innerHTML === "Dark")
             can.style.display = "initial";
         else
             can.style.display = "none";
         var canDark = document.createElement("img");
         canDark.src = "images/delete_dark.png";
         canDark.className = "trashcan-dark";
-        if(document.getElementById("theme").innerHTML == "Dark")
+        if(document.getElementById("theme").innerHTML === "Dark")
             canDark.style.display = "none";
         else
             canDark.style.display = "initial";
@@ -291,6 +223,73 @@ function addTarget(id){
         tarcalc.push(rates[id].country);
         
     }
+}
+
+// dropdown list clicked
+function listClicked(){
+    document.getElementById(this.parentNode.parentNode.id).classList.toggle("show");
+    if(this.parentNode.parentNode.id === "bDrop")
+        addBase(this.id);
+    else 
+        addTarget(this.id);
+    showResult();
+}
+// dropdown search function
+function filterFunction(dropdowndivID,inputID) {
+    var input, filter, ul, li, a, i;
+    input = document.getElementById(inputID);
+    filter = input.value.toUpperCase();
+    var div = document.getElementById(dropdowndivID);
+    a = div.getElementsByTagName("a");
+    for (i = 0; i < a.length; i++) {
+        if (a[i].getAttribute("country").toUpperCase().indexOf(filter) > -1) {
+            a[i].style.display = "";
+        } else {
+            a[i].style.display = "none";
+        }
+    }
+}
+
+// dropdown cancel button
+function cancelClicked(id){
+    document.getElementById(id).classList.toggle("show");
+}
+
+function setCountryList(id,select){
+    var common = document.createElement("optgroup");
+    common.label = "Common Currency";
+    var other = document.createElement("optgroup");
+    other.label = "Other Currency";
+    document.getElementById(id).appendChild(common);
+    document.getElementById(id).appendChild(other);
+    for(var i = 0;i < totalcountries;i++){
+        var temp = document.createElement("option");
+        temp.value = i;
+        temp.innerHTML = rates[i].country;
+        if (rates[i].country == select){
+            temp.selected = "selected";
+        }
+        var t;
+        for(var j = 0;j < commonlist.length;j++){
+            if(rates[i].country === commonlist[j]){
+                t = common;
+                break;
+            }
+            else{
+                t = other;
+            }
+        }        
+        t.appendChild(temp);        
+    }
+}
+
+//calucate function
+function calRate(base,target){
+    var brate = getRateByCountry(base);
+    var trate = getRateByCountry(target);
+    var a = $("#amount").val();
+    var r = a * brate / trate;
+    return r.toFixed(2);
 }
 
 //show historical rate
@@ -360,7 +359,7 @@ function init(temp){
             var date = d.getDate();
             storedMonth = localStorage.getItem("month");
             storedDate = localStorage.getItem("date");
-            if(mon == storedMonth && date == storedDate){
+            if(mon === storedMonth && date === storedDate){
                 rates = JSON.parse(localStorage.getItem('rate'));
                 totalcountries = localStorage.getItem('total');
                 console.log("load cache");
@@ -442,7 +441,7 @@ function getData(key,date){
 //changing theme
 function changeTheme(){
     var bt = document.getElementById("theme");
-    if (bt.innerHTML == "Dark"){
+    if (bt.innerHTML === "Dark"){
         bt.innerHTML = "Light";
         bt.className = "btn btn-light";
         
