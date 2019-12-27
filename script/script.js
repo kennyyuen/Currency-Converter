@@ -64,71 +64,20 @@ function setDropDownList(id, orient){
 function dropDownClicked(id) {
     document.getElementById(id).classList.toggle("show");
 }
-// dropdown list clicked
-function listClicked(){
-    console.log(this.id); 
-    document.getElementById(this.parentNode.parentNode.id).classList.toggle("show");
-    if(this.parentNode.parentNode.id == "bDrop")
-        addBase(this.id);
-    else 
-        addTarget(this.id);
-    showResult();
-}
-// dropdown search function
-function filterFunction(dropdowndivID,inputID) {
-    var input, filter, ul, li, a, i;
-    input = document.getElementById(inputID);
-    filter = input.value.toUpperCase();
-    div = document.getElementById(dropdowndivID);
-    a = div.getElementsByTagName("a");
-    for (i = 0; i < a.length; i++) {
-        if (a[i].getAttribute("country").toUpperCase().indexOf(filter) > -1) {
-            a[i].style.display = "";
-        } else {
-            a[i].style.display = "none";
-        }
-    }
-}
-// dropdown cancel button
-function cancelClicked(id){
-    document.getElementById(id).classList.toggle("show");
-}
 
-function setCountryList(id,select){
-    var common = document.createElement("optgroup");
-    common.label = "Common Currency";
-    var other = document.createElement("optgroup");;
-    other.label = "Other Currency";
-    document.getElementById(id).appendChild(common);
-    document.getElementById(id).appendChild(other);
-    for(var i = 0;i < totalcountries;i++){
-        var temp = document.createElement("option");
-        temp.value = i;
-        temp.innerHTML = rates[i].country;
-        if (rates[i].country == select){
-            temp.selected = 'selected'
+// Show Calculated result
+function showResult(){
+    //target
+    for(var i = 0;i < tarcalc.length;i++){
+        //base
+        for(var j = 0;j < basecalc.length;j++){
+            var temp = document.getElementById(i+"r"+j);
+            if(temp != null){
+                temp.innerHTML = calRate(basecalc[j],tarcalc[i]);
+                console.log(temp.id);
+            }
         }
-        var t;
-        for(var j = 0;j < commonlist.length;j++){
-            if(rates[i].country == commonlist[j]){
-                t = common;
-                break;
-            }
-            else{
-                t = other;
-            }
-        }        
-        t.appendChild(temp);        
-    }
-}
-
-//calucate function
-function calRate(base,target){
-    var brate = getRateByCountry(base);
-    var trate = getRateByCountry(target);
-    var a = $('#amount').val();
-    var r = a * brate / trate;
-    return r.toFixed(2);
+    }       
 }
 
 //table function
@@ -189,12 +138,12 @@ function addBase(id){
         span2.appendChild(canDark);
         
         
-        for(var i = 0;i < tarcalc.length;i++){
+        for(var j = 0;j < tarcalc.length;j++){
             var t = document.createElement("td");
-            t.id = i+"r"+basecalc.length;
+            t.id = j+"r"+basecalc.length;
             t.className = "value";
-            var r = document.getElementById("r" + i);
-            if(r != null){
+            var r = document.getElementById("r" + j);
+            if(r !== null){
                 r.appendChild(t);
             }
         }
@@ -202,6 +151,73 @@ function addBase(id){
         basecountrylist.push(rates[id].country);
         basecalc.push(rates[id].country);
     }
+}
+
+// dropdown list clicked
+function listClicked(){
+    document.getElementById(this.parentNode.parentNode.id).classList.toggle("show");
+    if(this.parentNode.parentNode.id == "bDrop")
+        addBase(this.id);
+    else 
+        addTarget(this.id);
+    showResult();
+}
+// dropdown search function
+function filterFunction(dropdowndivID,inputID) {
+    var input, filter, ul, li, a, i;
+    input = document.getElementById(inputID);
+    filter = input.value.toUpperCase();
+    div = document.getElementById(dropdowndivID);
+    a = div.getElementsByTagName("a");
+    for (i = 0; i < a.length; i++) {
+        if (a[i].getAttribute("country").toUpperCase().indexOf(filter) > -1) {
+            a[i].style.display = "";
+        } else {
+            a[i].style.display = "none";
+        }
+    }
+}
+
+// dropdown cancel button
+function cancelClicked(id){
+    document.getElementById(id).classList.toggle("show");
+}
+
+function setCountryList(id,select){
+    var common = document.createElement("optgroup");
+    common.label = "Common Currency";
+    var other = document.createElement("optgroup");;
+    other.label = "Other Currency";
+    document.getElementById(id).appendChild(common);
+    document.getElementById(id).appendChild(other);
+    for(var i = 0;i < totalcountries;i++){
+        var temp = document.createElement("option");
+        temp.value = i;
+        temp.innerHTML = rates[i].country;
+        if (rates[i].country == select){
+            temp.selected = 'selected';
+        }
+        var t;
+        for(var j = 0;j < commonlist.length;j++){
+            if(rates[i].country == commonlist[j]){
+                t = common;
+                break;
+            }
+            else{
+                t = other;
+            }
+        }        
+        t.appendChild(temp);        
+    }
+}
+
+//calucate function
+function calRate(base,target){
+    var brate = getRateByCountry(base);
+    var trate = getRateByCountry(target);
+    var a = $("#amount").val();
+    var r = a * brate / trate;
+    return r.toFixed(2);
 }
 
 function addTarget(id){
@@ -290,22 +306,6 @@ function showRate(){
     document.getElementById("histresult").innerHTML = baseicon + "<span id='histbaseindicate'>  " + bCountry + "1  = </span>" + taricon + " " + tCountry + " " + r;
     
 }
-// Show Calculated result
-function showResult(){
-    //target
-    for(var i = 0;i < tarcalc.length;i++){
-        //base
-        for(var j = 0;j < basecalc.length;j++){
-            var temp = document.getElementById(i+"r"+j);
-            if(temp != null){
-                temp.innerHTML = calRate(basecalc[j],tarcalc[i]);
-                console.log(temp.id);
-            }
-        }
-    }   
-    
-}
-
 
 //button event function
 //nav bar button
@@ -389,7 +389,7 @@ function loadJSON(callback){
     handler.overrideMimeType("application/json");
     handler.open('GET', 'key.json', true);
     handler.onreadystatechange = function () {
-        if (handler.readyState == 4 && handler.status == "200") {
+        if (handler.readyState === 4 && handler.status === "200") {
             callback(handler.responseText);
         }
     };
@@ -511,10 +511,10 @@ $(document).ready(function(){
     //mouse event function
     $('#table:has(td)').mouseover(function(e){
         var cell = $(e.target).closest("td");
-        if(isNaN(cell.text()) == false){
+        if(isNaN(cell.text()) === false){
             console.log(cell.attr('id'));
-            var b = parseInt(cell.attr('id').split('r')[1]);
-            var t = parseInt(cell.attr('id').split('r')[0]);
+            var b = parseInt(cell.attr('id').split('r')[1], 10);
+            var t = parseInt(cell.attr('id').split('r')[0], 10);
             var bCountry = basecalc[b];
             var tCountry = tarcalc[t];
             var html = bCountry + " " + $('#amount').val() + " = <span id='black'>" + tCountry + " " + cell.text() + "</span>"; 
